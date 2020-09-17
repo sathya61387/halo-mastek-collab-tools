@@ -53,7 +53,7 @@
                             "ActionMode": "CREATE_UPDATE",
                             "RoleArn": "arn:aws:iam::445121286360:role/Halo-CloudFormation",
                             "StackName": "asi-preprod-stack-pipeline",
-                            "TemplateConfiguration": "SourceArtifact::Halo-ASI/Halo-asi-prod-parameters.json",
+                            "TemplateConfiguration": "SourceArtifact::Halo-ASI/halo-asi-dev-pipeline",
                             "TemplatePath": "SourceArtifact::Halo-ASI/quickstart-asi-vpc-atlassian-services.yaml"
                         },
                         "outputArtifacts": [],
@@ -128,7 +128,7 @@
                             "ActionMode": "CREATE_UPDATE",
                             "RoleArn": "arn:aws:iam::445121286360:role/Halo-CloudFormation",
                             "StackName": "asi-prod-stack-pipeline",
-                            "TemplateConfiguration": "SourceArtifact::test_asi_parameter.json",
+                            "TemplateConfiguration": "SourceArtifact::Halo-ASI/Halo-asi-prod-parameters.json",
                             "TemplatePath": "SourceArtifact::quickstart-vpc-for-atlassian-services.yaml"
                         },
                         "outputArtifacts": [],
