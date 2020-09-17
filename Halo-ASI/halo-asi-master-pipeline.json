@@ -129,7 +129,7 @@
                             "RoleArn": "arn:aws:iam::445121286360:role/Halo-CloudFormation",
                             "StackName": "asi-prod-stack-pipeline",
                             "TemplateConfiguration": "SourceArtifact::Halo-ASI/Halo-asi-prod-parameters.json",
-                            "TemplatePath": "SourceArtifact::quickstart-vpc-for-atlassian-services.yaml"
+                            "TemplatePath": "SourceArtifact::Halo-ASI/quickstart-asi-vpc-atlassian-services.yaml"
                         },
                         "outputArtifacts": [],
                         "inputArtifacts": [
