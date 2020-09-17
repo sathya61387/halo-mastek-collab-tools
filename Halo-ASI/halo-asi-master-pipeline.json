@@ -21,7 +21,7 @@
                         "runOrder": 1,
                         "configuration": {
                             "Branch": "master",
-                            "OAuthToken": "f28d71986dd46becf21df7c89c2c5be6e24c26d5",
+                            "OAuthToken": "2d019509b5e189039a824f9e6c4b29b512c01115",
                             "Owner": "sathya61387",
                             "PollForSourceChanges": "false",
                             "Repo": "halo-mastek-collab-tools"
