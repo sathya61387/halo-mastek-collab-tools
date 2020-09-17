@@ -1,0 +1,147 @@
+{
+    "pipeline": {
+        "name": "halo-collab-dev-branch-pipeline",
+        "roleArn": "arn:aws:iam::445121286360:role/service-role/AWSCodePipelineServiceRole-eu-west-2-test-pipeline",
+        "artifactStore": {
+            "type": "S3",
+            "location": "codepipeline-eu-west-2-333771250891"
+        },
+        "stages": [
+            {
+                "name": "Source",
+                "actions": [
+                    {
+                        "name": "Source",
+                        "actionTypeId": {
+                            "category": "Source",
+                            "owner": "ThirdParty",
+                            "provider": "GitHub",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "Branch": "develop",
+                            "OAuthToken": "8cdbf662d066bd504cfa9e9671475b6f996674a6",
+                            "Owner": "asifalimir",
+                            "PollForSourceChanges": "false",
+                            "Repo": "halo-collab-tools"
+                        },
+                        "outputArtifacts": [
+                            {
+                                "name": "SourceArtifact"
+                            }
+                        ],
+                        "inputArtifacts": [],
+                        "region": "eu-west-2",
+                        "namespace": "SourceVariables"
+                    }
+                ]
+            },
+            {
+                "name": "deploy-dev-stack",
+                "actions": [
+                    {
+                        "name": "deploy-dev-stack",
+                        "actionTypeId": {
+                            "category": "Deploy",
+                            "owner": "AWS",
+                            "provider": "CloudFormation",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "ActionMode": "CREATE_UPDATE",
+                            "RoleArn": "arn:aws:iam::445121286360:role/Halo-CloudFormation",
+                            "StackName": "asi-dev-stack-pipeline",
+                            "TemplateConfiguration": "SourceArtifact::dev_asi_parameter.json",
+                            "TemplatePath": "SourceArtifact::quickstart-vpc-for-atlassian-services.yaml"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": [
+                            {
+                                "name": "SourceArtifact"
+                            }
+                        ],
+                        "region": "eu-west-2",
+                        "namespace": "DeployVariables"
+                    }
+                ]
+            },
+            {
+                "name": "test-deployment-approval",
+                "actions": [
+                    {
+                        "name": "test-deployment-approval",
+                        "actionTypeId": {
+                            "category": "Approval",
+                            "owner": "AWS",
+                            "provider": "Manual",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "CustomData": "Please review the stack. Your approval is needed to deploy the stack on testing environment",
+                            "NotificationArn": "arn:aws:sns:eu-west-2:445121286360:Prod-Approvals"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": [],
+                        "region": "eu-west-2"
+                    }
+                ]
+            },
+            {
+                "name": "delete-dev-Stack",
+                "actions": [
+                    {
+                        "name": "delete-dev-stack",
+                        "actionTypeId": {
+                            "category": "Deploy",
+                            "owner": "AWS",
+                            "provider": "CloudFormation",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "ActionMode": "DELETE_ONLY",
+                            "RoleArn": "arn:aws:iam::445121286360:role/Halo-CloudFormation",
+                            "StackName": "asi-dev-stack-pipeline"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": [],
+                        "region": "eu-west-2"
+                    }
+                ]
+            }
+            {
+                "name": "deploy-test-stack",
+                "actions": [
+                    {
+                        "name": "deploy-test-stack",
+                        "actionTypeId": {
+                            "category": "Deploy",
+                            "owner": "AWS",
+                            "provider": "CloudFormation",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "ActionMode": "CREATE_UPDATE",
+                            "RoleArn": "arn:aws:iam::445121286360:role/Halo-CloudFormation",
+                            "StackName": "asi-test-stack-pipeline",
+                            "TemplateConfiguration": "SourceArtifact::test_asi_parameter.json",
+                            "TemplatePath": "SourceArtifact::quickstart-vpc-for-atlassian-services.yaml"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": [
+                            {
+                                "name": "SourceArtifact"
+                            }
+                        ],
+                        "region": "eu-west-2"
+                    }
+                ]
+            }
+        ],
+        "version": 13
+    }
+}

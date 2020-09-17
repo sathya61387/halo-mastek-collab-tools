@@ -1,0 +1,16 @@
+{
+  "Parameters":{
+    "AccessCIDR" :    "172.0.0.0/16",
+    "AvailabilityZones" : "eu-west-2a,eu-west-2b",
+    "ExportPrefix" : "HALO-ASI",
+    "BastionHostRequired" : "false",
+    "NATInstanceType" : "t3.small",
+    "PrivateSubnet1CIDR" : "172.0.0.0/19",
+    "PrivateSubnet2CIDR" : "172.0.32.0/19",
+    "PublicSubnet1CIDR" : "172.0.128.0/20",
+    "PublicSubnet2CIDR" : "172.0.144.0/20",
+    "QSS3BucketName" : "aws-quickstart",
+    "QSS3BucketRegion" : "",
+    "QSS3KeyPrefix" : "quickstart-atlassian-services/"
+    }
+}

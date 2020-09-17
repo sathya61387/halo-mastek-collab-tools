@@ -1,0 +1,147 @@
+{
+    "pipeline": {
+        "name": "halo-asi-master-branch-pipeline",
+        "roleArn": "arn:aws:iam::445121286360:role/service-role/AWSCodePipelineServiceRole-eu-west-2-test-pipeline",
+        "artifactStore": {
+            "type": "S3",
+            "location": "codepipeline-eu-west-2-333771250891"
+        },
+        "stages": [
+            {
+                "name": "Source",
+                "actions": [
+                    {
+                        "name": "Source",
+                        "actionTypeId": {
+                            "category": "Source",
+                            "owner": "ThirdParty",
+                            "provider": "GitHub",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "Branch": "master",
+                            "OAuthToken": "f28d71986dd46becf21df7c89c2c5be6e24c26d5",
+                            "Owner": "sathya61387",
+                            "PollForSourceChanges": "false",
+                            "Repo": "halo-mastek-collab-tools"
+                        },
+                        "outputArtifacts": [
+                            {
+                                "name": "SourceArtifact"
+                            }
+                        ],
+                        "inputArtifacts": [],
+                        "region": "eu-west-2",
+                        "namespace": "SourceVariables"
+                    }
+                ]
+            },
+            {
+                "name": "deploy-preprod-stack",
+                "actions": [
+                    {
+                        "name": "deploy-preprod-stack",
+                        "actionTypeId": {
+                            "category": "Deploy",
+                            "owner": "AWS",
+                            "provider": "CloudFormation",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "ActionMode": "CREATE_UPDATE",
+                            "RoleArn": "arn:aws:iam::445121286360:role/Halo-CloudFormation",
+                            "StackName": "asi-preprod-stack-pipeline",
+                            "TemplateConfiguration": "SourceArtifact::Halo-ASI/Halo-asi-prod-parameters.json",
+                            "TemplatePath": "SourceArtifact::Halo-ASI/quickstart-asi-vpc-atlassian-services.yaml"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": [
+                            {
+                                "name": "SourceArtifact"
+                            }
+                        ],
+                        "region": "eu-west-2",
+                        "namespace": "DeployVariables"
+                    }
+                ]
+            },
+            {
+                "name": "prod-deployment-approval",
+                "actions": [
+                    {
+                        "name": "prod-deployment-approval",
+                        "actionTypeId": {
+                            "category": "Approval",
+                            "owner": "AWS",
+                            "provider": "Manual",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "CustomData": "Please review the stack. Your approval is needed to deploy the stack on production environment",
+                            "NotificationArn": "arn:aws:sns:eu-west-2:445121286360:Prod-Approvals"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": [],
+                        "region": "eu-west-2"
+                    }
+                ]
+            },
+            {
+                "name": "delete-preprod-Stack",
+                "actions": [
+                    {
+                        "name": "delete-preprod-stack",
+                        "actionTypeId": {
+                            "category": "Deploy",
+                            "owner": "AWS",
+                            "provider": "CloudFormation",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "ActionMode": "DELETE_ONLY",
+                            "RoleArn": "arn:aws:iam::445121286360:role/Halo-CloudFormation",
+                            "StackName": "asi-preprod-stack-pipeline"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": [],
+                        "region": "eu-west-2"
+                    }
+                ]
+            },
+        {
+                "name": "deploy-prod-stack",
+                "actions": [
+                    {
+                        "name": "deploy-prod-stack",
+                        "actionTypeId": {
+                            "category": "Deploy",
+                            "owner": "AWS",
+                            "provider": "CloudFormation",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "ActionMode": "CREATE_UPDATE",
+                            "RoleArn": "arn:aws:iam::445121286360:role/Halo-CloudFormation",
+                            "StackName": "asi-prod-stack-pipeline",
+                            "TemplateConfiguration": "SourceArtifact::test_asi_parameter.json",
+                            "TemplatePath": "SourceArtifact::quickstart-vpc-for-atlassian-services.yaml"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": [
+                            {
+                                "name": "SourceArtifact"
+                            }
+                        ],
+                        "region": "eu-west-2"
+                    }
+                ]
+            }
+        ],
+        "version": 13
+    }
+}
